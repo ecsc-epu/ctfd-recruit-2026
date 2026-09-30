@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+{% from "macros/forms.html" import render_extra_fields %}
+
+{% block content %}
+  {# The settings page as a 1998 keygen window: static, no plasma, no animation. #}
+  <div class="container kg-wrap">
+    <div class="kg">
+      <div class="kg-title">
+        <span class="kg-t">ECSC_Profile_Keygen.exe</span>
+        <span class="kg-wb" aria-hidden="true"><i>_</i><i>&#9633;</i><i>&times;</i></span>
+      </div>
+
+      <div class="kg-banner" aria-hidden="true">
+        <svg class="kg-scope" viewBox="0 0 240 40" preserveAspectRatio="none">
+          <polyline points="0,20 10,8 20,30 30,12 40,26 50,5 60,34 70,16 80,22 90,6 100,32 110,14 120,24 130,4 140,36 150,18 160,20 170,9 180,31 190,13 200,25 210,7 220,33 230,17 240,20"/>
+        </svg>
+        <b class="kg-logo">ECSC</b>
+        <span class="kg-crack">profile patcher &middot; cracked by ECSC</span>
+      </div>
+
+      <div class="nav kg-tabs" role="tablist">
+        <button
+            class="nav-link active" id="settings-profile-tab" data-bs-toggle="pill"
+            data-bs-target="#profile" role="tab"
+        >{% trans %}Profile{% endtrans %}
+        </button>
+        <button
+            class="nav-link" id="settings-tokens-tab" data-bs-toggle="pill" data-bs-target="#tokens"
+            role="tab"
+        >{% trans %}Access Tokens{% endtrans %}
+        </button>
+      </div>
+
+      <div class="kg-body">
+        <div class="tab-content" id="v-pills-tabContent">
+          <div class="tab-pane show active" id="profile" role="tabpanel">
+            {% include "components/errors.html" %}
+
+            {% with form = Forms.self.SettingsForm(language=language, country=country) %}
+              <form
+                  method="post" accept-charset="utf-8" autocomplete="off" role="form"
+                  x-data="SettingsForm"
+                  @submit.prevent="updateProfile()"
+              >
+                <div class="kg-row">
+                  {{ form.name.label() }}
+                  {{ form.name(class="form-control", value=name) }}
+                </div>
+                <div class="kg-row">
+                  {{ form.email.label() }}
+                  {{ form.email(class="form-control", value=email) }}
+                </div>
+                <div class="kg-row">
+                  {{ form.language.label() }}
+                  {{ form.language(class="form-select", value=language) }}
+                </div>
+
+                <p class="kg-sep"><span>password</span></p>
+                <div class="kg-row">
+                  {{ form.confirm.label() }}
+                  {{ form.confirm(class="form-control kg-key") }}
+                </div>
+                <div class="kg-row">
+                  {{ form.password.label() }}
+                  {{ form.password(class="form-control kg-key") }}
+                </div>
+
+                <p class="kg-sep"><span>info</span></p>
+                <div class="kg-row">
+                  {{ form.affiliation.label() }}
+                  {{ form.affiliation(class="form-control", value=affiliation or "") }}
+                </div>
+                <div class="kg-row">
+                  {{ form.website.label() }}
+                  {{ form.website(class="form-control", value=website or "") }}
+                </div>
+                <div class="kg-row">
+                  {{ form.country.label() }}
+                  {{ form.country(class="form-select", value=country) }}
+                </div>
+
+                <div class="kg-extra">
+                  {{ render_extra_fields(form.extra) }}
+                </div>
+
+                <div class="kg-foot">
+                  <p
+                      class="kg-status" role="status" :class="{ 'ok': success, 'bad': errors.length }"
+                      x-text="success ? '> profile patched. ok!' : (errors.length ? '> ERR: ' + errors.join(' ') : '> ready.')"
+                  >&gt; ready.</p>
+                  {{ form.submit(class="kg-go", value="PATCH!") }}
+                </div>
+              </form>
+            {% endwith %}
+          </div>
+
+          <div class="tab-pane" id="tokens" role="tabpanel">
+
+            {% with form = Forms.self.TokensForm() %}
+              <form method="POST" x-data="TokensForm" @submit.prevent="generateToken()" class="mb-3">
+                <div class="modal fade" tabindex="-1" x-ref="tokenModal">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{% trans %}API Key Generated{% endtrans %}</h5>
+                        <button
+                            type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                      </div>
+
+                      <div class="modal-body">
+                        <p>{% trans %}Please copy your API Key, it won't be shown again!{% endtrans %}</p>
+
+                        <div class="input-group mb-3">
+                          <input
+                              type="text" class="form-control bg-white" x-ref="token"
+                              x-model="token" readonly
+                          >
+                          <button
+                              class="btn btn-outline-secondary px-3" type="button"
+                              @click="copyToken()"
+                          >
+                            <i class="fas fa-clipboard"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                          Got it!
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="kg-row">
+                  {{ form.expiration.label() }}
+                  {{ form.expiration(class="form-control") }}
+                </div>
+                <div class="kg-row">
+                  {{ form.description.label() }}
+                  {{ form.description(class="form-control", rows="2") }}
+                </div>
+
+                <div class="kg-foot">
+                  <p class="kg-status">&gt; generate an API key</p>
+                  {{ form.submit(class="kg-go", value="KEYGEN!") }}
+                </div>
+              </form>
+            {% endwith %}
+
+            {% if tokens %}
+              <hr>
+
+              <h4 class="kg-sub">{% trans %}Active Tokens{% endtrans %}</h4>
+
+              {# This has to be wrapping the table modal, because div with modal will get pushed out
+                 of the table and alpine ref will not work #}
+              <div x-data="Tokens">
+                <div
+                    class="modal fade" x-ref="confirmModal" tabindex="-1" role="dialog"
+                    aria-modal="true"
+                >
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{% trans %}Delete Token{% endtrans %}</h5>
+                        <button
+                            type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"
+                        >
+                        </button>
+                      </div>
+
+                      <div class="modal-body">
+                        <p>{% trans %}Are you sure you want to delete this token?{% endtrans %}</p>
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                          No
+                        </button>
+                        <button
+                            type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            @click="deleteSelectedToken()"
+                        >Yes
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <table class="table table-striped align-middle">
+                  <thead>
+                  <tr>
+                    <th class="text-center">{% trans %}Created{% endtrans %}</th>
+                    <th>{% trans %}Expiration{% endtrans %}</th>
+                    <th>{% trans %}Description{% endtrans %}</th>
+                    <th>{% trans %}Delete{% endtrans %}</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for token in tokens %}
+                    <tr x-ref="token-{{ token.id }}">
+                      <td class="text-center">
+                        <span data-time="{{ token.created | isoformat }}"></span>
+                      </td>
+                      <td>
+                        <span data-time="{{ token.expiration | isoformat }}"></span>
+                      </td>
+                      <td>
+                        <span>{{ token.description | default('', true) }}</span>
+                      </td>
+                      <td class="text-center">
+                        <span
+                            class="delete-token" role="button"
+                            @click="deleteTokenModal({{ token.id }})">
+                            <i class="cursor-pointer fas fa-times"></i>
+                        </span>
+                      </td>
+                    </tr>
+                  {% endfor %}
+
+                  </tbody>
+                </table>
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+      <p class="kg-credit">greetz: ECSC crew &middot; EPU &middot; 1998 forever</p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ Assets.js("assets/js/settings.js") }}
+{% endblock %}

@@ -1,0 +1,894 @@
+// ECSC look for CTFd: the recruitment site's style (black, chrome, blood, Win98 windows, 1998 dither),
+// kept static on purpose: no 3D, no animations, no transitions, no fixed backgrounds.
+$ink: #fdf7ff;
+$pink: #ff3fa8;
+$blood: #e3120b;
+$win: #e9dcff;
+$win-ink: #1b0f33;
+$win-hi: #ffffff;
+$win-lo: #6b4fa6;
+$title-a: #ff4fd8;
+$title-b: #6a2cff;
+$yellow: #ffe14f;
+
+:root,
+[data-bs-theme="dark"] {
+  --bs-body-bg: #07030d;
+  --bs-body-color: #{$ink};
+  --bs-body-font-family: "Space Mono", ui-monospace, monospace;
+  --bs-body-font-size: 0.95rem;
+  --bs-link-color: #{$pink};
+  --bs-link-color-rgb: 255, 63, 168;
+  --bs-link-hover-color: #{$yellow};
+  --bs-link-hover-color-rgb: 255, 225, 79;
+  --bs-primary: #{$pink};
+  --bs-primary-rgb: 255, 63, 168;
+  --bs-secondary-color: #cbb9ef;
+  --bs-tertiary-bg: #120a22;
+  --bs-border-color: #3a2a5e;
+  --bs-emphasis-color: #fff;
+}
+
+*,
+*::before,
+*::after {
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+html,
+body,
+.container {
+  font-family: var(--bs-body-font-family);
+}
+
+body {
+  background-color: #05020b;
+  // static starfield (two tile sizes so it doesn't look gridded) + a faint 1998 dither
+  background-image:
+    radial-gradient(1.5px 1.5px at 20px 30px, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 130px 80px, #ffd6f5 50%, transparent 51%),
+    radial-gradient(1px 1px at 70px 160px, #cfe3ff 50%, transparent 51%),
+    radial-gradient(2px 2px at 180px 190px, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 40px 110px, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 95px 250px, #fff1c2 50%, transparent 51%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='1' height='1' fill='%23ffffff' fill-opacity='.04'/%3E%3C/svg%3E");
+  background-size: 210px 210px, 210px 210px, 210px 210px, 210px 210px, 290px 290px, 290px 290px, 4px 4px;
+}
+
+// the rainbow road crossing the sky: one fixed layer, painted once, never repainted on scroll
+body::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  left: -20vw;
+  right: -20vw;
+  top: 58vh;
+  height: 90px;
+  transform: rotate(-14deg);
+  background: linear-gradient(180deg, transparent 0 6%, #ff2a2a 6% 19%, #ff8a00 19% 32%, #ffe600 32% 45%, #2dff6a 45% 58%, #22d3ff 58% 71%, #7a5cff 71% 84%, #ff4fd8 84% 94%, transparent 94%);
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+
+::selection {
+  background: $pink;
+  color: #000;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Anton", Impact, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+// ---------------------------------------------------------------- navbar: black with a static blood edge
+.navbar {
+  background: #000 !important;
+  border-bottom: 4px solid $blood;
+  font-family: "VT323", monospace;
+  font-size: 1.2rem;
+
+  .nav-link {
+    white-space: nowrap;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 26px;
+    pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='26'%3E%3Cg fill='%23e3120b'%3E%3Cpath d='M14 0h7v12a3.5 3.5 0 0 1-7 0z'/%3E%3Cpath d='M52 0h5v6a2.5 2.5 0 0 1-5 0z'/%3E%3Cpath d='M90 0h9v19a4.5 4.5 0 0 1-9 0z'/%3E%3Cpath d='M131 0h5v8a2.5 2.5 0 0 1-5 0z'/%3E%3Cpath d='M168 0h7v14a3.5 3.5 0 0 1-7 0z'/%3E%3Cpath d='M203 0h4v5a2 2 0 0 1-4 0z'/%3E%3C/g%3E%3C/svg%3E") repeat-x;
+  }
+
+  .navbar-brand {
+    font-family: "Anton", Impact, sans-serif;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #fff !important;
+    text-shadow: 0 2px 0 $blood;
+  }
+
+  .nav-link {
+    color: #e6dcff !important;
+
+    &:hover,
+    &:focus,
+    &.active {
+      color: $yellow !important;
+    }
+  }
+}
+
+// ---------------------------------------------------------------- page header: chrome title
+main {
+  padding-top: 4.5rem;
+}
+
+.jumbotron {
+  background: transparent !important;
+  padding: 2.5rem 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    font-size: clamp(2.6rem, 7vw, 5rem);
+    line-height: 1;
+    margin: 0;
+    color: #f4f1fb;
+    background: linear-gradient(180deg, #fff 0%, #e9e6f2 42%, #8d86a3 50%, #fff 56%, #cfcadc 80%, #fff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1px #09060d;
+    filter: drop-shadow(0 4px 0 #000);
+  }
+
+  .container {
+    font-family: "VT323", monospace;
+    font-size: 1.4rem;
+    color: #ff9ad5;
+  }
+}
+
+// ---------------------------------------------------------------- Win98 windows: cards, modals, list groups
+.card,
+.modal-content,
+.list-group-item,
+.dropdown-menu,
+.alert,
+.toast {
+  --bs-card-bg: #{$win};
+  --bs-card-color: #{$win-ink};
+  --bs-modal-bg: #{$win};
+  --bs-modal-color: #{$win-ink};
+  background: $win !important;
+  color: $win-ink !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: inset -3px -3px 0 $win-lo, inset 3px 3px 0 $win-hi, 0 0 0 2px #000, 8px 8px 0 rgba(0, 0, 0, 0.55);
+
+  a:not(.btn) {
+    color: #6a2cff;
+  }
+
+  .text-muted,
+  small {
+    color: #5a4a7a !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: $win-ink;
+  }
+}
+
+// dropdowns (language picker): dark ink on the Win98 window, gradient highlight like a 1998 menu
+.dropdown-menu {
+  --bs-dropdown-link-color: #{$win-ink};
+  --bs-dropdown-link-hover-color: #fff;
+  --bs-dropdown-link-hover-bg: #{$title-b};
+  --bs-dropdown-link-active-color: #fff;
+  --bs-dropdown-link-active-bg: #{$pink};
+  padding: 4px;
+  max-height: 70vh;
+  scrollbar-color: #{$win-lo} #{$win};
+  overflow-y: auto;
+
+  .dropdown-item {
+    padding: 0.15em 1em;
+    color: $win-ink;
+    font-family: "Space Mono", monospace;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background: linear-gradient(90deg, $title-a, $title-b);
+      color: #fff;
+    }
+
+    &.bg-primary {
+      background: $pink !important;
+      color: #fff !important;
+    }
+  }
+}
+
+.card-header,
+.modal-header {
+  background: linear-gradient(90deg, $title-a, $title-b) !important;
+  color: #fff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  font-family: "VT323", monospace;
+  font-size: 1.3rem;
+}
+
+.btn-close {
+  filter: none;
+  background-color: $win;
+  opacity: 1;
+  border-radius: 0;
+  box-shadow: inset -2px -2px 0 $win-lo, inset 2px 2px 0 $win-hi, 0 0 0 1px #000;
+}
+
+// challenge modal tabs
+.modal-content .nav-tabs {
+  border-bottom: 2px solid $win-lo;
+
+  .nav-link {
+    color: $win-ink;
+    border: 0;
+    border-radius: 0;
+    font-family: "VT323", monospace;
+    font-size: 1.2rem;
+
+    &.active {
+      background: $win-ink;
+      color: #fff;
+    }
+  }
+}
+
+.challenge-name {
+  font-size: 2rem;
+}
+
+.challenge-value {
+  font-family: "VT323", monospace;
+  font-size: 2rem;
+  color: #6a2cff;
+}
+
+.challenge-desc {
+  color: $win-ink;
+}
+
+.challenge-tag,
+.badge.bg-info {
+  background: $win-ink !important;
+  color: $yellow !important;
+  border-radius: 0;
+  font-family: "VT323", monospace;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+// ---------------------------------------------------------------- buttons: chunky keygen keys with a hard shadow
+.btn {
+  border-radius: 0 !important;
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 0 !important;
+  padding: 0.55rem 1.2rem;
+  position: relative;
+
+  &:hover {
+    transform: translate(-2px, -2px);
+    filter: brightness(1.08);
+  }
+
+  &:active {
+    transform: translate(2px, 2px);
+  }
+}
+
+.btn-primary,
+.btn-outline-primary,
+.btn-success,
+.btn-info,
+.btn-danger,
+.btn-outline-danger {
+  outline: 2px solid #000;
+  outline-offset: 0;
+}
+
+.btn-primary,
+.btn-outline-primary,
+.btn-success,
+.btn-info {
+  background: $pink !important;
+  color: #fff !important;
+  box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.35), inset 3px 3px 0 rgba(255, 255, 255, 0.5), 5px 5px 0 #000;
+
+  &:hover {
+    box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.35), inset 3px 3px 0 rgba(255, 255, 255, 0.5), 7px 7px 0 $yellow;
+  }
+
+  &:active {
+    box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.45), 1px 1px 0 #000;
+  }
+}
+
+.btn-secondary,
+.btn-outline-secondary,
+.btn-light,
+.btn-outline-dark {
+  background: $win !important;
+  color: $win-ink !important;
+  box-shadow: inset -2px -2px 0 $win-lo, inset 2px 2px 0 $win-hi, 0 0 0 2px #000;
+}
+
+.btn-danger,
+.btn-outline-danger {
+  background: $blood !important;
+  color: #fff !important;
+  box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.45), inset 2px 2px 0 rgba(255, 255, 255, 0.4), 0 0 0 2px #000;
+}
+
+// ---------------------------------------------------------------- challenge board
+.category-header h3 {
+  display: inline-block;
+  padding: 0.15rem 0.8rem;
+  background: #000;
+  color: $yellow;
+  border: 2px solid $pink;
+  font-size: 1.6rem;
+  box-shadow: 4px 4px 0 $pink;
+}
+
+[data-bs-theme="dark"] .challenge-button,
+.challenge-button {
+  background: $win !important;
+  color: $win-ink !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: inset -3px -3px 0 $win-lo, inset 3px 3px 0 $win-hi, 0 0 0 2px #000, 5px 5px 0 rgba(0, 0, 0, 0.5) !important;
+  font-family: "Space Mono", monospace;
+
+  p {
+    margin: 0;
+  }
+
+  span {
+    font-family: "VT323", monospace;
+    font-size: 1.4rem;
+    color: #6a2cff;
+  }
+
+  &:hover,
+  &:focus {
+    background: #f6f0ff !important;
+  }
+
+  padding-top: 1.6rem;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    top: 3px;
+    height: 0.9rem;
+    background: linear-gradient(90deg, $title-a, $title-b);
+  }
+
+  &:hover,
+  &:focus {
+    transform: translate(-2px, -2px);
+  }
+
+  &.challenge-solved::after {
+    content: "★";
+    position: absolute;
+    right: 8px;
+    top: 0.95rem;
+    font-size: 1.3rem;
+    color: $yellow;
+    text-shadow: 0 0 0 #000, 1px 1px 0 #000;
+  }
+
+  &.challenge-solved {
+    background: $pink !important;
+    color: #fff !important;
+    box-shadow: inset -3px -3px 0 #a3006a, inset 3px 3px 0 #ffc2ec, 0 0 0 2px #000, 5px 5px 0 rgba(0, 0, 0, 0.5) !important;
+
+    span {
+      color: #fff;
+    }
+  }
+}
+
+// ---------------------------------------------------------------- forms: sunken white fields
+.form-control,
+.form-select {
+  background-color: #fff !important;
+  color: $win-ink !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0 $win-lo, inset -2px -2px 0 $win-hi, 0 0 0 1px #000 !important;
+  font-family: "Space Mono", monospace;
+
+  &:focus {
+    outline: 2px dashed $pink;
+    outline-offset: 2px;
+  }
+}
+
+input.form-control[name="submission"],
+#challenge-input.challenge-input.form-control {
+  background: #000 !important;
+  color: #3dff6a !important;
+  font-family: "VT323", monospace !important;
+  font-size: 1.4rem !important;
+  letter-spacing: 0.04em;
+}
+
+// ---------------------------------------------------------------- tables / scoreboard
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: #{$ink};
+  --bs-table-striped-bg: rgba(255, 63, 168, 0.06);
+  --bs-table-striped-color: #{$ink};
+  --bs-table-hover-bg: rgba(255, 225, 79, 0.08);
+  --bs-table-hover-color: #fff;
+  --bs-table-border-color: #3a2a5e;
+
+  thead th {
+    font-family: "VT323", monospace;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: $yellow;
+    text-transform: uppercase;
+    border-bottom: 2px solid $pink;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+#scoreboard tbody tr:nth-child(1) th,
+#scoreboard tbody tr:nth-child(1) td {
+  color: $yellow;
+}
+
+#scoreboard tbody tr:nth-child(-n + 3) th[scope="row"] {
+  font-family: "Anton", sans-serif;
+  font-size: 1.3rem;
+}
+
+// ---------------------------------------------------------------- bits
+.progress {
+  border-radius: 0;
+  background: #000;
+  box-shadow: 0 0 0 2px $win-lo;
+}
+
+.progress-bar {
+  background: repeating-linear-gradient(90deg, $pink 0 10px, transparent 10px 12px);
+}
+
+code,
+pre {
+  color: #3dff6a;
+  font-family: "VT323", monospace;
+  font-size: 1.1rem;
+}
+
+hr {
+  border-color: $pink;
+  opacity: 0.6;
+}
+
+// ---------------------------------------------------------------- the smiley sun (static) and the pirate
+.ecsc-sun {
+  position: fixed;
+  z-index: 0;
+  right: -38px;
+  top: 90px;
+  width: 230px;
+  height: 230px;
+  pointer-events: none;
+  mix-blend-mode: screen; // the render's black background disappears into the page
+
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+.ecsc-pirate {
+  position: fixed;
+  z-index: 20;
+  left: 10px;
+  bottom: 8px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.ecsc-pirate-btn {
+  flex: none;
+  width: 92px;
+  height: 115px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 0 0 #fff) drop-shadow(3px 4px 0 rgba(0, 0, 0, 0.5));
+  }
+
+  .ln {
+    stroke: #000;
+    stroke-width: 7px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .ln-o {
+    paint-order: stroke;
+  }
+}
+
+.ecsc-bubble {
+  position: relative;
+  margin: 0;
+  max-width: min(250px, calc(100vw - 30px));
+  padding: 8px 12px;
+  background: #fff;
+  color: #000;
+  border: 3px solid #000;
+  border-radius: 18px 18px 18px 4px;
+  font: 0.95rem/1.3 "Space Mono", monospace;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.45);
+  pointer-events: none; // clicks go through to whatever is underneath
+
+  &[hidden] {
+    display: none;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 26px;
+    bottom: -15px;
+    border: 9px solid transparent;
+    border-top: 14px solid #000;
+    border-bottom: 0;
+  }
+}
+
+// no footer: CTFd's sticky-footer margin goes, the bottom padding keeps the pirate off the last line.
+// <main> is positioned (so it paints over the sun, which comes before it) but has no z-index,
+// so modals inside it still stack above Bootstrap's backdrop.
+body {
+  margin-bottom: 0;
+}
+
+main {
+  position: relative;
+  padding-bottom: 150px;
+}
+
+@media (max-width: 767px) {
+  .ecsc-sun {
+    width: 130px;
+    height: 130px;
+    right: -30px;
+    top: 70px;
+    opacity: 0.8;
+  }
+
+  .ecsc-pirate-btn {
+    width: 64px;
+    height: 80px;
+  }
+
+  .ecsc-bubble {
+    font-size: 0.8rem;
+  }
+}
+
+// ---------------------------------------------------------------- settings page: a 1998 keygen window
+.kg-wrap {
+  max-width: 660px;
+  padding-top: 2.5rem;
+}
+
+.kg {
+  background: $win;
+  color: $win-ink;
+  padding: 3px;
+  font-family: Tahoma, Verdana, "DejaVu Sans", sans-serif;
+  box-shadow: inset -3px -3px 0 $win-lo, inset 3px 3px 0 $win-hi, 0 0 0 2px #000, 12px 12px 0 rgba(0, 0, 0, 0.55);
+}
+
+.kg-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.35em 0.4em 0.35em 0.6em;
+  background: linear-gradient(90deg, $title-a, $title-b);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.kg-t {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kg-wb {
+  display: flex;
+  gap: 3px;
+
+  i {
+    font: 700 0.95rem/1 "Space Mono", monospace;
+    width: 1.6em;
+    height: 1.35em;
+    display: grid;
+    place-items: center;
+    background: $win;
+    color: $win-ink;
+    box-shadow: inset -1px -1px 0 $win-lo, inset 1px 1px 0 $win-hi;
+  }
+}
+
+.kg-banner {
+  position: relative;
+  height: 88px;
+  margin: 3px 0;
+  overflow: hidden;
+  border: 2px solid #000;
+  background:
+    repeating-conic-gradient(rgba(0, 0, 0, 0.35) 0 25%, transparent 0 50%) 0 0 / 4px 4px,
+    radial-gradient(circle at 18% 30%, #ff4fd8 0, transparent 45%),
+    radial-gradient(circle at 70% 80%, #22d3ff 0, transparent 40%),
+    radial-gradient(circle at 90% 10%, #6a2cff 0, transparent 50%),
+    #2a0a3a;
+}
+
+.kg-scope {
+  position: absolute;
+  right: 0.6em;
+  top: 0.5em;
+  width: 55%;
+  height: 44px;
+
+  polyline {
+    fill: none;
+    stroke: #3dff6a;
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+  }
+}
+
+.kg-logo {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  background: #fff;
+  color: #a43cff;
+  font: 700 3rem/1.05 Verdana, "DejaVu Sans", sans-serif;
+  letter-spacing: -0.06em;
+  padding: 0 0.18em 0.06em;
+}
+
+.kg-crack {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.3rem;
+  font: 1.05rem/1 "VT323", monospace;
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.kg-tabs {
+  gap: 3px;
+  padding: 0 0.5em;
+  border-bottom: 2px solid $win-lo;
+
+  .nav-link {
+    padding: 0.2em 0.9em;
+    border-radius: 0;
+    background: $win;
+    color: $win-ink;
+    font: 1.2rem/1.2 "VT323", monospace;
+    box-shadow: inset -1px 0 0 $win-lo, inset 1px 1px 0 $win-hi;
+
+    &.active {
+      background: $win-ink;
+      color: #fff;
+    }
+  }
+}
+
+.kg-body {
+  padding: 0.8em;
+}
+
+.kg-row,
+.kg-extra > div {
+  display: grid;
+  grid-template-columns: 9.5em minmax(0, 1fr);
+  align-items: center;
+  gap: 0.4em;
+  margin: 0.35em 0 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+
+  label,
+  b {
+    margin: 0;
+    font-weight: 400;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+
+  .form-control,
+  .form-select {
+    text-align: center;
+    text-align-last: center;
+    font-size: 1.05rem;
+    padding: 0.25em 0.5em;
+    box-shadow: inset 2px 2px 0 $win-lo, inset -2px -2px 0 $win-hi !important;
+  }
+
+  small {
+    grid-column: 2;
+  }
+}
+
+.kg-row .form-control.kg-key {
+  background: #000 !important;
+  color: #3dff6a !important;
+  font: 1.35rem/1.15 "VT323", monospace;
+  letter-spacing: 0.08em;
+}
+
+.kg-sep {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0.8em 0 0.2em;
+  font: 1.1rem/1 "VT323", monospace;
+  color: $win-lo;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    border-top: 2px groove $win-hi;
+    box-shadow: 0 -1px 0 $win-lo;
+  }
+}
+
+.kg-foot {
+  display: flex;
+  gap: 0.6em;
+  align-items: stretch;
+  margin-top: 0.9em;
+}
+
+.kg-status {
+  flex: 1;
+  margin: 0;
+  padding: 0.15em 0.5em;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  font: 1.3rem/1.1 "VT323", monospace;
+  color: #6a2cff;
+  background: #fff;
+  box-shadow: inset 2px 2px 0 $win-lo, inset -2px -2px 0 $win-hi;
+
+  &.ok {
+    color: #0a8a2a;
+  }
+
+  &.bad {
+    color: $blood;
+  }
+}
+
+.kg-go {
+  font: 700 1rem/1 Tahoma, Verdana, sans-serif;
+  letter-spacing: 0.06em;
+  padding: 0.8em 1.4em;
+  border: 0;
+  background: $pink;
+  color: #fff;
+  box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.45), inset 2px 2px 0 rgba(255, 255, 255, 0.6), 0 0 0 2px #000;
+
+  &:hover {
+    background: #ff6fc0;
+  }
+
+  &:active {
+    transform: translate(1px, 1px);
+    box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.45), 0 0 0 2px #000;
+  }
+
+  &:focus-visible {
+    outline: 2px dashed #fff;
+    outline-offset: -6px;
+  }
+}
+
+.kg-sub {
+  margin: 1.2em 0 0.4em;
+  text-align: center;
+  font: 1.5rem/1 "VT323", monospace;
+  color: $win-ink;
+}
+
+.kg .table {
+  --bs-table-color: #{$win-ink};
+  --bs-table-striped-color: #{$win-ink};
+  --bs-table-border-color: #{$win-lo};
+
+  thead th {
+    color: #6a2cff;
+  }
+}
+
+.kg .alert {
+  box-shadow: inset 2px 2px 0 $win-lo, inset -2px -2px 0 $win-hi !important;
+}
+
+.kg-credit {
+  margin: 0 0 0.5em;
+  text-align: center;
+  font: 1.1rem/1.1 "VT323", monospace;
+  opacity: 0.7;
+}
+
+@media (max-width: 575.98px) {
+  .kg-row,
+  .kg-extra > div {
+    grid-template-columns: 1fr;
+    gap: 0.15em;
+
+    small {
+      grid-column: 1;
+    }
+  }
+
+  .kg-scope {
+    display: none;
+  }
+
+  .kg-crack {
+    top: 0.4rem;
+    bottom: auto;
+  }
+}

@@ -1,0 +1,88 @@
+{# ECSC decorations: the 3D smiley sun (pre-rendered animated WebP, no WebGL) and a chatty MS-Paint pirate (~1 KB of JS). #}
+<div class="ecsc-sun" aria-hidden="true">
+  <img src="{{ url_for('views.themes', path='img/sun.webp') }}" width="220" height="220" alt="" decoding="async">
+</div>
+
+<div class="ecsc-pirate" id="ecsc-pirate">
+  <button class="ecsc-pirate-btn" type="button" aria-label="Ông hải tặc: bấm để nghe câu khác">
+    <svg viewBox="0 0 280 350" aria-hidden="true">
+      <g class="ln-o">
+        <path d="M84 186 L42 230" class="ln"/>
+        <path d="M46 226 L6 300 L18 306 L56 234 Z" fill="#000"/>
+        <path d="M28 216 L66 246" class="ln" stroke-width="9"/>
+        <path d="M196 182 L232 132" class="ln"/>
+        <path d="M232 132 C 262 112, 262 72, 234 64" class="ln" stroke-width="9" fill="none"/>
+        <path d="M100 150 L180 150 L212 176 L196 198 L182 188 L184 248 L96 248 L98 188 L84 198 L68 176 Z" fill="#000"/>
+        <circle cx="140" cy="194" r="14" fill="#ff7ad9"/>
+        <rect x="132" y="202" width="16" height="10" rx="2" fill="#ff7ad9"/>
+        <circle cx="135" cy="193" r="3.4" fill="#000"/><circle cx="145" cy="193" r="3.4" fill="#000"/>
+        <path d="M118 214 L162 234 M162 214 L118 234" stroke="#ff7ad9" stroke-width="5" stroke-linecap="round"/>
+        <path d="M96 248 L184 248 L190 288 L146 288 L140 268 L134 288 L90 288 Z" fill="#d9b8ff" class="ln" stroke-width="5"/>
+        <path d="M112 288 L104 320 M168 288 L178 320" class="ln"/>
+        <ellipse cx="96" cy="330" rx="26" ry="12" fill="#fff" class="ln" stroke-width="6"/>
+        <ellipse cx="188" cy="330" rx="26" ry="12" fill="#fff" class="ln" stroke-width="6"/>
+        <circle cx="140" cy="104" r="44" fill="#fff" class="ln"/>
+        <path d="M96 84 L184 116" class="ln" stroke-width="5"/>
+        <circle cx="122" cy="98" r="12" fill="#000"/>
+        <circle cx="158" cy="97" r="5.5" fill="#000"/>
+        <path d="M116 120 Q140 144 166 118" class="ln" fill="none"/>
+        <path d="M62 80 C 80 22, 200 22, 218 80 C 190 64, 90 64, 62 80 Z" fill="#000"/>
+        <path d="M100 52 C 110 10, 170 10, 180 52 Z" fill="#000"/>
+        <path d="M132 36 l8 -8 l8 8 l-8 8 Z" fill="#fff"/>
+      </g>
+    </svg>
+  </button>
+  <p class="ecsc-bubble" id="ecsc-bubble" aria-live="polite"></p>
+</div>
+
+<script>
+(function () {
+  // what the pirate mumbles: a few lines per page, plus some for everywhere
+  var L = {
+    challenges: [
+      "Bài nào cũng có flag cả, chỉ là nó chưa chịu ló mặt ra thôi.",
+      "Bí quá thì đọc lại đề. Lần đọc thứ bảy thường là lần sáng mắt ra.",
+      "Flag có dạng ECSC{...} nhé. Gõ sai thì đừng đổ tại ta.",
+      "Bài 10 điểm cũng là điểm. Nhặt hết vàng vụn trước rồi hẵng đi săn kho báu.",
+      "Ô hồng là bài ngươi giải rồi đấy. Còn nhiều ô trắng lắm, thủy thủ."
+    ],
+    scoreboard: [
+      "Bảng điểm tự cập nhật. Nhìn chằm chằm vào nó cũng không lên hạng được đâu.",
+      "Đứng đầu bảng hôm nay chưa chắc đứng đầu ngày mai. Biển cả thất thường lắm.",
+      "Ta từng đứng hạng nhất… trong một giải có đúng một đội."
+    ],
+    user: [
+      "Hồ sơ của ngươi trông cũng ra dáng hacker rồi đấy.",
+      "Thanh hồng càng dài thì ngươi càng đáng sợ. Cố lên!"
+    ],
+    login: [
+      "Mật khẩu là gì? Đừng nói với ta, ta hay nói mớ lắm.",
+      "Quên mật khẩu thì bấm Forgot. Ta không nhớ hộ được đâu."
+    ],
+    any: [
+      "Yo-ho-ho! Chào mừng lên tàu ECSC!",
+      "Uống nước đi. Hacker khô họng thì gõ sai flag đấy.",
+      "Bị kẹt quá lâu thì đứng dậy đi một vòng. Flag không chạy mất đâu.",
+      "Đừng chia sẻ flag cho đội khác. Cướp biển cũng có luật đấy.",
+      "Ông mặt trời kia cười suốt từ sáng. Chắc lão giải hết bài rồi."
+    ]
+  };
+  var path = location.pathname.replace(/\/+$/, "");
+  var key = /\/challenges/.test(path) ? "challenges" : /\/scoreboard/.test(path) ? "scoreboard"
+          : /\/(user|team)s?(\/|$)/.test(path) ? "user" : /\/(login|reset_password)/.test(path) ? "login" : "any";
+  var lines = (key === "any" ? [] : L[key]).concat(L.any);
+  var i = Math.floor(Math.random() * lines.length);
+  var bubble = document.getElementById("ecsc-bubble");
+  var hideT;
+  // a line shows for 8 s, then the bubble gets out of the way
+  function say() {
+    bubble.textContent = lines[i++ % lines.length];
+    bubble.hidden = false;
+    clearTimeout(hideT);
+    hideT = setTimeout(function () { bubble.hidden = true; }, 8000);
+  }
+  say();
+  document.querySelector(".ecsc-pirate-btn").addEventListener("click", say);
+  setInterval(function () { if (!document.hidden) say(); }, 25000);
+})();
+</script>
